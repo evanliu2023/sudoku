@@ -54,6 +54,13 @@ class GameBoardGui:
     # Use this rect for collision detection with the mouse pos.
     solve_button_rect = solve_text_surface.get_rect(topleft=(400, solve_col_position))
 
+    # button for play solve
+    play_solve_text_surface = button_font.render('Play Solve',
+                                            True, pygame.Color('Green'))
+    play_solve_col_position = 650
+    # Use this rect for collision detection with the mouse pos.
+    play_solve_button_rect = play_solve_text_surface.get_rect(topleft=(400, play_solve_col_position))
+
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     pygame.display.set_caption("Sudoku")
 
@@ -163,6 +170,45 @@ class GameBoardGui:
         self.screen.blit(self.medium_text_surface, self.medium_button_rect)
         self.screen.blit(self.hard_text_surface, self.hard_button_rect)
         self.screen.blit(self.solve_text_surface, self.solve_button_rect)
+        self.screen.blit(self.play_solve_text_surface, self.play_solve_button_rect)
+
+    def play_solve_giving_board(self, board):
+        self.play_solving(board)
+        return board
+
+    def play_solving(self, board):
+        position = util.pick_empty(board)
+        if not position:
+            return board
+        for number in range(1, 10):
+            if util.valid(number, position[0], position[1], board):
+                board[position[0]][position[1]] = number
+                if self.solving(board):
+                    return True
+                board[position[0]][position[1]] = 0
+                self.play_display()
+        return board
+
+    def solving(self, board):
+        position = util.pick_empty(board)
+        if not position:
+            return True
+        for number in range(1, 10):
+            if util.valid(number, position[0], position[1], board):
+                board[position[0]][position[1]] = number
+                if self.solving(board):
+                    self.play_display()
+                    return True
+                board[position[0]][position[1]] = 0
+                self.play_display()
+            self.play_display()
+        return False
+
+    def play_display(self):
+        self.update_boxes_array()
+        self.repaint()
+        pygame.display.update()
+        pygame.time.delay(20)
 
     def repaint(self):
         self.screen.fill("white")
@@ -293,6 +339,12 @@ class GameBoardGui:
                             # pressed mouse down on Solve text box
                             print('solve_button_rect Button pressed.')
                             self.my_board = self.board.solve_giving_board(self.my_board)
+                            self.update_boxes_array()
+                            self.repaint()
+                        elif self.play_solve_button_rect.collidepoint(event.pos):
+                            # pressed mouse down on Solve text box
+                            print('play_solve_button_rect Button pressed.')
+                            self.my_board = self.play_solve_giving_board(self.my_board)
                             util.print_board(self.my_board)
                             self.update_boxes_array()
                             self.repaint()

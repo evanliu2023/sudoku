@@ -43,3 +43,4 @@ class Board:
         self.solve(board)
         print()
         util.print_board(board)
+

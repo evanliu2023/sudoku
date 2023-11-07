@@ -5,3 +5,4 @@ class ActionType:
     MEDIUM = "Medium"
     HARD = "Hard"
     SOLVE = "Solve"
+    PLAY_SOLVE = "Play Solve"
