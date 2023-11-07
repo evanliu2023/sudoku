@@ -1,7 +1,7 @@
 import pygame
 from Board import Board
 import button
-
+import util
 
 
 class Box:
@@ -85,8 +85,8 @@ run = True
 error_count = 0
 lose_img = pygame.image.load('lose.png').convert_alpha()
 board = Board()
-my_board = board.createRandomBoard("easy")
-board.print_board(my_board)
+my_board = board.create_random_board("easy")
+util.print_board(my_board)
 for row in range(0, 9):
     for col in range(0, 9):
         box = Box(my_board[row][col], temp=0, row=row, col=col, x=col * 80, y=row * 80)
@@ -145,11 +145,11 @@ while run:
             if event.key == pygame.K_RETURN:
                 print("I CLICKED ENTER")
                 print("HIGHLIGHTED BOX", previous_clicked_box.value, previous_clicked_box.temp)
-                print(board.print_board(my_board))
+                print(util.print_board(my_board))
                 if previous_clicked_box.temp != 0:
-                   if board.valid(previous_clicked_box.temp, previous_clicked_box.row, previous_clicked_box.col, my_board):
+                   if util.valid(previous_clicked_box.temp, previous_clicked_box.row, previous_clicked_box.col, my_board):
                        print("VALID")
-                       temp_board = board.cloneBoard(my_board)
+                       temp_board = board.clone_board(my_board)
                        temp_board[previous_clicked_box.row][previous_clicked_box.col] = previous_clicked_box.temp
                        if board.solve(temp_board):
                            previous_clicked_box.value = previous_clicked_box.temp
